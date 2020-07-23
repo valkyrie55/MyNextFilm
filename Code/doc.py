@@ -253,7 +253,7 @@ for scene in scenes:
 # for word in words:
 #     print(word)
 #     print("\n")
-print (" LEN OF WORDLIST", len(words))
+print (" LEN OF WORDLIST ", len(words))
 
 def find_threshold(reduced_percent):
     """ Takes as input the percentage of compression required in the script 
