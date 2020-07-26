@@ -1,7 +1,9 @@
+#-------------------------------- LATEST CODE 23/07/2020 ----------------------------------------
+#---------------------------------WITHOUT PARENTHETICALS ----------------------------------------
 import re
 import nltk
-import random
 import spacy
+import json
 import textacy
 from collections import Counter
 from spacy.lang.en.stop_words import STOP_WORDS
@@ -13,8 +15,11 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 STOP_WORDS = set(stopwords.words('english'))
-#pip install textacy
 
+NP_count = 0
+VP = 50
+NNP = 0
+nlp = spacy.load('en_core_web_sm')
 def warn(*args, **kwargs):                      #to supress warnings
     pass
 import warnings
@@ -22,9 +27,10 @@ warnings.warn = warn
 
 random_list = []          
 filename = "itsamatch.txt"
-characters = ['KUSH', 'POOJA', 'DRIVER', 'SHOPKEEPER', 'AKASH', 'RECEPTIONIST', 'Pooja', 'Kush', 'Kushagra Mehta']
+characters = ['KUSH', 'POOJA','MAID','DRIVER', 'SHOPKEEPER', 'AKASH', 'RECEPTIONIST', 'kush', 'pooja','driver','maid', 'shopkeeper', 'akash ','receptionist', 'kushagra mehta', 'Pooja', 'Kush','Akash' ]
+slug_line_words = ['mall', 'car', 'cab', 'stall', 'hospital', 'hospital cafe','traffic/cab', 'chemist shop', 'evening', 'atm from', 'hotel front','bathroom', 'reception']
 refined_line = []
-#read file
+# #read file
 try:
     with open(filename, "r") as input:
         input_ = input.read().split('\n\n')
@@ -33,6 +39,13 @@ except:
     print("Error reading file!")
 for line in input_:
     refined_line.append(line.strip())
+
+#read json file
+try:
+    with open('/home/shweta/work/MNF_work/papers/vectors/itsamatchCharacterVector.json') as f:
+        data = json.load(f)
+except:
+    print("Error in reading json file!")
 
 words = []
 speakers_words = [] #word list for speakers and their dialogues
@@ -100,13 +113,24 @@ for line in refined_line:            #if new scene
             scene_dic['A'+str(a_counter)] = line
     #print(scene_dic)
 scenes.append(scene)
-total_sc_cnt=0
-for sc in scenes:
-   # print(sc)
-    total_sc_cnt+=1
+# total_sc_cnt=0
+# for sc in scenes:
+#    # print(sc)
+#     total_sc_cnt+=1
 
-print ("total scene count\n", total_sc_cnt)    
+#print ("total scene count\n", total_sc_cnt)    
 #print ("SCENES LIST")
+
+# def lemmatize(word):
+#     doc = nlp(word)
+#     tokens = [token.lemma_ if token.lemma_ != '-PRON-' else token for token in doc]
+#     s = " ".join(str(v) for v in tokens)
+#     return s
+
+def preprocessed_sentence(sentence):
+    t = nltk.RegexpTokenizer(r"\w+")
+    new_sentence = t.tokenize(sentence)
+    return ' '.join(new_sentence)
 
 new_scene=[]
 
@@ -115,14 +139,15 @@ for scene in scenes:
     if scene_no == 0:
         scene_no = scene_no+1
         continue
-    
-    scene_dict={}
+    # scene_dict={}
+    diag_sentence_no = 1
+    sentence_no = 0
     action_counter=1
     dialogue_counter=1
     for line in scene:
         if type(line)==type(""):
             if line.startswith('INT') or line.startswith('EXT') or line.startswith('EXT/INT') or line.startswith('INT/EXT'):
-                scene_dict['SL'] = line
+                # scene_dict['SL'] = line
                 slug_words=line.split(" ")
                 for each_word in slug_words:
                     temp_word={}
@@ -130,7 +155,7 @@ for scene in scenes:
                     temp_word['scene_num'] = scene_no
                     temp_word['type'] = 'SL'
                     temp_word['type_no'] = "" 
-                    temp_word['sentence_no'] = '??'
+                    temp_word['sentence_no'] = 0
                     temp_word['word_no_in sent'] = "??"
                     temp_word['importance'] = 0.5
                     temp_word['POS'] = '??pos'
@@ -138,117 +163,108 @@ for scene in scenes:
                     words.append(temp_word)
 
             else:
-                scene_dict['AC'+ str(action_counter)] = line
-                #print ("Scene_dic  ", scene_dict)
-                sent_text = nltk.sent_tokenize(line)
-                #print("Sent_text", sent_text)
-                sentence_no=0
-                for sentence in sent_text:
-                    tokens = nltk.word_tokenize(sentence)
-                    postag=nltk.pos_tag(tokens)
-                    #print ("posttag", postag)
-                    sentence_no=sentence_no+1
-                    word_no=0
-                    for (token,pos) in postag:
-                        word_no=word_no+1
-                        temp_word={}
-                        temp_word['word'] = token.lower()
-                        temp_word['scene_num'] = scene_no
-                        temp_word['type'] = 'AC'
-                        temp_word['type_no'] = str(action_counter)
-                        temp_word['sentence_no'] = sentence_no
-                        temp_word['word_no_in_sent'] = word_no
-                        temp_word['importance'] = 0.5
-                        temp_word['POS'] = pos
-                        #temp_word['Dependency'] = ''
-                        words.append(temp_word)
-                        #print("temp word in action")
-                    #print("Words in action", action_counter, )
-                    #print(words)
-                action_counter = action_counter + 1
+                sent_text = line.split('.')
+                for s in sent_text:
+                    if s:
+                        sentence = preprocessed_sentence(str(s))       #remove punchuations
+                        tokens = nltk.word_tokenize(sentence)
+                        pos_tag = nltk.pos_tag(tokens)
+                        sentence_no = sentence_no+1
+                        word_no = 0
+                        for (token,pos) in pos_tag:
+                            word_no = word_no + 1
+                            temp_word = {}
+                            temp_word['word'] = token
+                            temp_word['scene_num'] = scene_no
+                            temp_word['type'] = 'AC'
+                            temp_word['type_no'] = str(action_counter)
+                            temp_word['sentence_no'] = sentence_no
+                            temp_word['word_no_in_sent'] = word_no
+                            temp_word['importance'] = 0.5
+                            temp_word['POS'] = pos
+                            words.append(temp_word)
+                action_counter += 1           
 
         else:
-            dialogue_words="dialoge"
+            dialogue_words = "dialoge"
             diag_list = line.keys()
-            diag_list=list(diag_list)
-            par_dia=line.values()
-            par_dia=list(par_dia)
-            f=diag_list[0]+"###"+par_dia[0][0]+"###"+par_dia[0][1]
+            diag_list = list(diag_list)
+            # print("Diag list: ")
+            # print(diag_list)
+            par_dia = line.values()
+            par_dia = list(par_dia)
+            f = diag_list[0]+"###"+par_dia[0][0]+"###"+par_dia[0][1]
+            # print("f: ", f)
             #print(diag_list[0]+"###"+par_dia[0][0]+"###"+par_dia[0][1])
-            scene_dict['DL'+ str(dialogue_counter)] = f   
+            # scene_dict['DL'+ str(dialogue_counter)] = f   
             temp_word={}  #for word list
             temp_word['word'] = diag_list[0]
             temp_word['scene_num'] = scene_no
             temp_word['type'] = 'DL_SPEAKER'
             temp_word['type_no'] = str(dialogue_counter)  #dialogue counter in the particular scene
-            temp_word['sentence_no'] = '??'
+            temp_word['sentence_no'] = 0
             temp_word['word_no_in_sent'] = "??"
             temp_word['importance'] = 0.5
             temp_word['POS'] = 'NNP'
-            #temp_word['Dependency'] = ''
             words.append(temp_word)
-            #print(temp_word) 
             parentheticals=par_dia[0][0].split(" ")
-            word_no=0
-            
+            word_no = 0
+            sentence_no += 1
             for each_word in parentheticals:
-                if each_word=='NONE':
+                if each_word == 'NONE':
                     break
-                word_no= word_no+1
+                word_no= word_no + 1
                 each_word = each_word.replace("(", "")
                 each_word = each_word.replace(")", "")
                 temp_word={}
-                temp_word['word'] = each_word.lower()
+                temp_word['word'] = each_word
                 temp_word['scene_num'] = scene_no
                 temp_word['type'] = 'DL_PARENTH'
                 temp_word['type_no'] = str(dialogue_counter)
-                temp_word['sentence_no'] = 1
+                temp_word['sentence_no'] = sentence_no
                 temp_word['word_no_in_sent'] = word_no
                 temp_word['importance'] = 0.5
                 temp_word['POS'] = '??pos'
                 #temp_word['Dependency'] = ''
                 words.append(temp_word)
-                #print(temp_word) +
-            dialogues=par_dia[0][1].split(" ")
-            #print("dial=============", dialogues)
-            sent_text = nltk.sent_tokenize(par_dia[0][1])
-            sentence_no=0
-            for sentence in sent_text:
-                tokens = nltk.word_tokenize(sentence)
-                postag=nltk.pos_tag(tokens)
-                sentence_no=sentence_no+1
-                word_no=0
-                for (token,pos) in postag:
-                    word_no=word_no+1
-                    temp_word={}
-                    temp_word['word'] = token.lower()
-                    temp_word['scene_num'] = scene_no
-                    temp_word['type'] = 'DL_DELIVERY'
-                    temp_word['type_no'] = str(dialogue_counter)
-                    temp_word['sentence_no'] = sentence_no
-                    temp_word['word_no_in_sent'] = word_no
-                    temp_word['importance'] = 0.5
-                    temp_word['POS'] = pos
-                    words.append(temp_word)   
+            dialogues = par_dia[0][1].split(" ")
+            # print("----------------------------------")
+            # print("par_dia[0][1]: ", dialogues)
+            dialogue = " ".join(dialogues)
+            # print("dialogue: ", dialogue)
+            diag_list = dialogue.split(".")
+            # print("Dialogue list: ")
+            # print(diag_list)
+            for s in diag_list:
+                # print("s: ", s)
+                if s:
+                    tokens = nltk.word_tokenize(preprocessed_sentence(s))
+                    postag = nltk.pos_tag(tokens)
+                    sentence_no = sentence_no + 1
+                    word_no = 0
+                    for (token,pos) in postag:
+                        word_no=word_no+1
+                        temp_word={}
+                        temp_word['word'] = token
+                        temp_word['scene_num'] = scene_no
+                        temp_word['type'] = 'DL_DELIVERY'
+                        temp_word['type_no'] = str(dialogue_counter)
+                        temp_word['sentence_no'] = sentence_no
+                        temp_word['word_no_in_sent'] = word_no
+                        temp_word['importance'] = 0.5
+                        temp_word['POS'] = pos
+                        words.append(temp_word)  
             dialogue_counter = dialogue_counter + 1
+    scene_no = scene_no+1
     ##see this
    
     #if scene_no > 1 : do we really need this check 
-    new_scene.append(scene_dict)
-    scene_no = scene_no+1
-# for each_word in words:
-#   print(each_word)
-#   print()
+    # new_scene.append(scene_dict)
 
-# for sc in scenes:
-#   print(sc)
-#   print()
-#####################################################################################################
+# # #####################################################################################################
 sentences = []
 
 def set_frequency(word_frequencies, scene_no, max_frequency):
-    # word = 'mall'
-    # print(word_frequencies[word])
     for each_word in words:
         if each_word['scene_num'] == scene_no:
             for word_ in word_frequencies.keys():
@@ -256,24 +272,6 @@ def set_frequency(word_frequencies, scene_no, max_frequency):
                     new_imp = each_word['importance'] + (word_frequencies[word_] / max_frequency)
                     each_word['importance'] = round(new_imp,2)
 
-def preprocessed_sentence(sentence):
-    t = nltk.RegexpTokenizer(r"\w+")
-    sentence = str(sentence)
-    new_sentence = t.tokenize(sentence)
-    return ' '.join(new_sentence)
-
-def lemmatize(sentence):
-  try:
-    BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')      #preprocessing
-    sentence = re.sub(BAD_SYMBOLS_RE,"",sentence.lower())
-  except:
-    print("Error in Preprocessing")
-  try:
-    lemma = WordNetLemmatizer()
-    lemmatized_sentence = " ".join(lemma.lemmatize(word) for word in word_tokenize(sentence))
-    return lemmatized_sentence
-  except: 
-    print("Error in performing Lemmatization")
 
 def filt(x):
     return x.label()=='NP'     #for Noun Phrases
@@ -281,7 +279,7 @@ def filt(x):
 def find_noun_phrases(sentence):
   noun = []
   tokens = nltk.pos_tag(word_tokenize(sentence))
-  pattern = " NP:{<DT>?<JJ.*>*<NN.*>+}"      #random pattern
+  pattern = " NP:{<DT>?<JJ>*<NN>}"      # pattern for NP
   ch = nltk.RegexpParser(pattern)
   tree = ch.parse(tokens)
   for subtree in tree.subtrees(filter =  filt): 
@@ -321,33 +319,87 @@ def find_phrases(sentence, scene_no, sentence_no):
             if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no'] == sentence_no:
                 each_sentence['phrases'].append(temp)
 
-SCENES = []
+def character_importance(character, scene_no, sent_no):
+    for i in data['data_file']:
+        if i['name'] == character.upper() :
+            return i['character_importance']
 
-def character_importance(character, scene_no):
-    imp_of_character = 0
-    total_dialogues = 0
-    for each_sentence in sentences:
-        if each_sentence['scene_num'] == scene_no:
-            if each_sentence['type'] == 'DL_PARENTH' or each_sentence['type'] == 'DL_DELIVERY':
-                if each_sentence['speaker'] == character:
-                    imp_of_character += 1    #dialgue count
-                total_dialogues += 1
-    return (imp_of_character / total_dialogues )
+def word_found(word, scene_no, sent_no):
+    for each_word in words:
+        if each_word['scene_num'] == scene_no and each_word['sentence_no'] == sent_no:
+            print("First")
+            if each_word['type'] != 'SL' and each_word['word'] == word:
+                print("Second")
+    return each_word
 
-#create sentence list
-nlp = spacy.load('en_core_web_sm')
+def compute_slugline_words_frequency(para):
+    docx = nlp(para)
+    tokens = [token.text for token in docx
+        if not token.is_stop and not token.is_punct]
+    slugline_words_frequency = Counter(tokens)
+    return slugline_words_frequency
 
+def set_slugline_words_importance(w, each_word, slugline_words_frequency):
+    if w in slug_line_words:
+        each_word['importance'] = each_word['importance'] + slugline_words_frequency[w] 
+
+def set_slugline_sentence_importance(scene_no, sentence_no, each_sentence):
+    imp = 0
+    for each_word in words:
+        if each_word['scene_num'] == scene_no and each_word['type'] == 'SL':
+            imp += round(each_word['importance'], 2)
+    return imp
+
+def set_importance(token, sent_no, scene_no, phrase_length, NP, VP, p):
+    phrase_importance = 0
+    #find the token in words list
+    for each_word in words:
+        if each_word['scene_num'] == scene_no and each_word['sentence_no'] == sent_no and each_word['word'] == token:          
+            if p == 'NP':
+                # print("Its NP")
+                pos = each_word['POS']
+                if word in characters:
+                    each_word['importance'] = each_word['importance'] + character_importance(word, scene_no, sent_no) 
+                    phrase_importance = each_word['importance']
+                    # print("character imp: ", phrase_importance)
+                elif pos == 'NN' or 'NNS' or 'NNP' or 'NNPS' :   #city, object, etc
+                    each_word['importance'] = each_word['importance'] + NP * phrase_length
+                    # print("Its NN case")
+                    phrase_importance = each_word['importance']
+                else: 
+                    each_word['importance'] = each_word['importance'] + NP * phrase_length
+                    phrase_importance = each_word['importance']
+                    # print("Else imp: ", each_word['importance'])
+                    phrase_word_importance = phrase_word_importance + each_word['importance']
+
+            elif p == 'VP':
+                # print("Its VP")
+                NP_phrase_count = 0
+                for d in each_sentence['phrases']:
+                    if d['phrase_type'] == 'NP':
+                        NP_phrase_count += 1
+                        each_word['importance'] += d['importance']
+                # print("VP imp: ", each_word['importance'])
+                if NP_phrase_count == 0:  
+                    each_word['importance'] += VP * phrase_length
+                phrase_importance = each_word['importance']
+
+    return phrase_importance
+
+# #create sentences list
 scene_no = 1
 for each_scene in scenes[1: len(scenes)]:
-    #print("Scene no: ", scene_no)
+    # print(each_scene)
+#     # print()
     sentence_counter = 1
     action_counter = 1
     dialogue_counter = 1
     for sentence in each_scene:
+        # print("Sentence: ", sentence)
         if type(sentence) == type(""):                        
             if sentence.startswith('INT') or sentence.startswith('EXT') or sentence.startswith('EXT/INT') or sentence.startswith('INT/EXT'):
                 temp = {}
-                temp['sentence'] = sentence
+                temp['sentence'] = preprocessed_sentence(str(sentence))
                 temp['scene_no'] = scene_no
                 temp['sentence_no'] = 0
                 temp['type'] = 'SL'
@@ -357,76 +409,77 @@ for each_scene in scenes[1: len(scenes)]:
                 #temp['phrases'] = []
                 temp['importance'] = 0
                 sentences.append(temp)
-            else:                                                              # AC line
-                docx = nlp(sentence)
-                sents = list(docx.sents)      #sentence list
-                for sentence in sents:                                           
-                    temp = {}
-                    temp['sentence'] = preprocessed_sentence(sentence)
-                    temp['scene_no'] = scene_no
-                    temp['sentence_no'] = str(sentence_counter)
-                    temp['type'] = 'AC'
-                    temp['type_no'] = str(action_counter)
-                    temp['speaker'] = '??'
-                    temp['phrases'] = []
-                    temp['importance'] = 0
-                    sentence_counter = sentence_counter + 1
-                    sentences.append(temp)
-                    action_counter += 1
+            else:                                                 # AC line
+                sentence_list = sentence.split('.')      #sentence list
+                for sentence in sentence_list:  
+                    if sentence:                  
+                        temp = {}
+                        temp['sentence'] = preprocessed_sentence(str(sentence))
+                        temp['scene_no'] = scene_no
+                        temp['sentence_no'] = sentence_counter
+                        temp['type'] = 'AC'
+                        temp['type_no'] = str(action_counter)
+                        temp['speaker'] = '??'
+                        temp['phrases'] = []
+                        temp['importance'] = 0
+                        sentence_counter = sentence_counter + 1
+                        sentences.append(temp)
+                        action_counter += 1
         elif type(sentence) == type(scene_dic):                #dictionary
+            # print("sentence: ", sentence)
             for i in sentence.keys():
                 SPEAKER = i
             for item in sentence.values():
+                # print("item: ", item)
                 for val in item:
-                    # print("Val: ",val)
-                    # print("Type: ", type(val))
                     if type(val) == int:
                         pass
                     elif val == 'NONE':
                         pass
-                    elif type(val) == type(" "):                
-                        if val.startswith("("):           #parenthetical
-                            temp = {}
-                            temp['sentence'] = preprocessed_sentence(val)
-                            temp['scene_no'] = scene_no
-                            temp['sentence_no'] = str(sentence_counter)
-                            temp['type'] = 'DL_PARENTH'
-                            temp['type_no'] = ''
-                            temp['speaker'] = SPEAKER
-                            temp['phrases'] = []
-                            temp['importance'] = 0
-                            sentence_counter += 1
-                            sentences.append(temp)                    
-                        else:  #dialogue
-                            temp = {}
-                            temp['sentence'] = preprocessed_sentence(val)
-                            temp['scene_no'] = scene_no
-                            temp['sentence_no'] = str(sentence_counter)
-                            temp['type'] = 'DL_DELIVERY'
-                            temp['type_no'] = str(dialogue_counter)
-                            temp['speaker'] = SPEAKER
-                            temp['phrases'] = []
-                            temp['importance'] = 0
-                            sentences.append(temp)
-                            sentence_counter += 1
-                            dialogue_counter += 1
+                    elif type(val) == type(" "):  
+                        sent = val.split(".")
+                        for s in sent: 
+                            if s:
+                                if s.startswith("("):           #parenthetical
+                                    temp = {}
+                                    temp['sentence'] = preprocessed_sentence(str(s))
+                                    temp['scene_no'] = scene_no
+                                    temp['sentence_no'] = sentence_counter
+                                    temp['type'] = 'DL_PARENTH'
+                                    temp['type_no'] = ''
+                                    temp['speaker'] = SPEAKER
+                                    temp['phrases'] = []
+                                    temp['importance'] = 0
+                                    sentence_counter += 1
+                                    sentences.append(temp)                    
+                                else:  #dialogue
+                                    temp = {}
+                                    temp['sentence'] = preprocessed_sentence(str(s))
+                                    temp['scene_no'] = scene_no
+                                    temp['sentence_no'] = sentence_counter
+                                    temp['type'] = 'DL_DELIVERY'
+                                    temp['type_no'] = str(dialogue_counter)
+                                    temp['speaker'] = SPEAKER
+                                    temp['phrases'] = []
+                                    temp['importance'] = 0
+                                    sentences.append(temp)
+                                    sentence_counter += 1
+                                    dialogue_counter += 1
     scene_no = scene_no +1
 
+# # #find phrases
 for each_sentence in sentences:
-    find_phrases(str(each_sentence['sentence']),each_sentence['scene_no'], each_sentence['sentence_no'])
+    find_phrases(each_sentence['sentence'], each_sentence['scene_no'], each_sentence['sentence_no'])
 
-#word frequency 
-scene_no = 1    
-sentence_counter = 1
+# # word frequency at scene level
 for scene_no in range(1, len(scenes)):
     sentence = ''
     for each_sentence in sentences:
-        if each_sentence['scene_no'] == scene_no and each_sentence['type'] != 'SL':
-          try:
-            sentence = sentence + str(each_sentence['sentence']) + '. '    #merge
-            sentence_counter = sentence_counter + 1
-          except:
-            print("Some error in concatenation")
+        if each_sentence['scene_no'] == scene_no:   
+            try:
+                sentence = sentence + each_sentence['sentence'] + '. '    #merge
+            except:
+                print("Some error in concatenation")
     docx = nlp(sentence)
     tokens = [token.text for token in docx
         if not token.is_stop and not token.is_punct]
@@ -435,133 +488,81 @@ for scene_no in range(1, len(scenes)):
     for i in word_frequencies.values():
         l. append(i)
     l.sort(reverse = True)            #sort in descending order
-    # print(l)
     max_frequency = l[0]
-    #print("Max frequency: ",  max_frequency)                    #Assign the frequencies to suitable sections in the list
     set_frequency(word_frequencies, scene_no, max_frequency)                                   
     scene_no = scene_no + 1
-    
-# print("Word list: ------------------------------------------------------------")
-# for each_word in words:
-#   print(each_word)
-#   print()
-# print()
-# print("Sentences list: ------------------------------------------------------------")
-# for each_sent in sentences:
-#   print(each_sent)
-#   print()
 
-#Assign importance to pharses
-DATE = 2.5
-TIME = 2.5
-CD = 3    # Numeric values
-NP = 5
-VP = 5
+for sent in sentences:
+    for each_dict in sent['phrases']:                   # calculate total Noun Phrases in the script
+        if each_dict['phrase_type'] == 'NP':
+            NP_count = NP_count + 1
+
+for e in words:                                        
+    if e['POS'] == 'NNP':                               # a constant value for all the Proper Nouns
+        NNP += 1      
+NP = NNP / NP_count * 100
+NP = round(NP, 2)
+
+# for each_sentence in sentences:
+#     if each_sentence['scene_no'] == 4 and each_sentence['sentence_no'] == 14:
+#         print("Sentence: ", each_sentence['sentence'])
+#         sent_no = each_sentence['sentence_no']
+#         scene_no = each_sentence['scene_no']
+#         for each_dict in each_sentence['phrases']:
+#             ph = each_dict['phrase']
+#             p = each_dict['phrase_type']
+#             tokens = nltk.word_tokenize(ph)
+#             phrase_length = len(tokens)
+#             for token in tokens:
+#                 if token.lower() not in STOP_WORDS:
+#                     print("Phrase: ", token)
+#                     imp = set_importance(token, sent_no, scene_no, phrase_length, NP, VP, p)
+#                     each_dict['importance'] = each_dict['importance'] + round(imp, 2)
+#                     print("Each_dict: ", each_dict['importance'])
 
 for each_sentence in sentences:
-   # print("Sentence: ", each_sentence['sentence'])
-    scene_no = each_sentence['scene_no']
     sent_no = each_sentence['sentence_no']
-    sentence_type = each_sentence['type']
+    scene_no = each_sentence['scene_no']
     for each_dict in each_sentence['phrases']:
-        phrase_importance = 0
         ph = each_dict['phrase']
-        #print("Phrase: ", ph)
+        p = each_dict['phrase_type']
         tokens = nltk.word_tokenize(ph)
         phrase_length = len(tokens)
         for token in tokens:
-    # print("Token: ", token)
-                for each_word in words:
-                    if each_word['scene_num'] == scene_no and each_word['type'] != 'SL' and each_word['sentence_no'] == int(sent_no):
-                        if each_word['word'] == token and each_dict['phrase_type'] =='NP':
-                            pos = each_word['POS']
-                            if pos == 'NNP':
-                               # print("Its NNP")
-                                if word in characters:
-                                     each_word['importance'] = each_word['importance'] + character_importance(phrase_word, scene_no) * l
-                                else:   #city, etc
-                                    each_word['importance'] = each_word['importance'] + (NP * 1.5) * phrase_length
-                            else: 
-                                each_word['importance'] = each_word['importance'] + NP * phrase_length
-                                #phrase_importance += each_word['importance']
-                            phrase_importance += each_word['importance']
-                            #print("Phrase importance: ", phrase_importance)
-                            each_dict['importance'] = each_dict['importance'] + phrase_importance
-                            #print(each_dict['importance'])
-                        # elif each_word['word'] == token and each_dict['phrase_type'] =='VP':
-                        #     #print("Verb phrase----------------------")
-                        #     for d in each_sentence['phrases']:
-                        #         if d['phrase_type'] == 'NP':
-                        #             each_dict['importance'] += d['importance']
-                        #     #print(each_dict['importance'])
-                        else:
-                            pass
-    
+            if token.lower() not in STOP_WORDS:
+                    # print("Phrase: ", token)
+                    imp = set_importance(token, sent_no, scene_no, phrase_length, NP, VP, p)
+                    each_dict['importance'] = each_dict['importance'] + round(imp, 2)
+                    # print("Each_dict: ", each_dict['importance'])
+# # # print("Done!")
+# # #scene string
+for scene_no in range(1, len(scenes)+1):
+    para = ''
+    for each_sentence in sentences:
+        try:
+            para = para + each_sentence['sentence'].lower() + '. '    #merge
+        except:
+            print("Error while concatenation")
+
+# #  #overall frequency distribution of slug line words in the script
+slugline_words_frequency = compute_slugline_words_frequency(para)
+
+# # # # # # #slug line importance
+for scene_no in range(1, len(scenes)):
+    for each_word in words:
+        if each_word['scene_num'] == scene_no and each_word['type'] == 'SL' and each_word['word'] != 'EXT' and each_word['word'] != 'INT' and each_word['word'] != 'EXT/INT':
+            w = each_word['word'].lower()
+            w = w.replace('.', '')
+            w = w.replace('-', '')
+            set_slugline_words_importance(w, each_word, slugline_words_frequency)
+
+# # # # # # # # ########################### Sentence Importance ##################
+# # # # # #slug line
 for each_sentence in sentences:
-    found = 0
     scene_no = each_sentence['scene_no']
-    sent_no = each_sentence['sentence_no']
-    sentence_type = each_sentence['type']
-    for each_dict in each_sentence['phrases']:
-        phrase_importance = 0
-        ph = each_dict['phrase']
-        #print("Phrase: ", ph)
-        tokens = nltk.word_tokenize(ph)
-        l = len(tokens)
-        for token in tokens:
-            #if token not in STOP_WORDS:
-               # print("Token: ", token)
-                for each_word in words:
-                    if each_word['scene_num'] == scene_no and each_word['type'] != 'SL' and each_word['sentence_no'] == int(sent_no):
-                        if each_word['word'] == token and each_dict['phrase_type'] =='VP':
-                            if token in characters:
-                                     each_word['importance'] = each_word['importance'] + character_importance(phrase_word, scene_no) * l
-                            # print("Verb phrase------------")
-                            # print("Phrase: ", ph)
-                            for d in each_sentence['phrases']:
-                                if d['phrase_type'] == 'NP':
-                                    found += 1
-                                if found < 1:   #no noun phrase
-                                    each_word['importance'] = each_word['importance'] + VP * l
-                                    phrase_importance += each_word['importance']
-                            each_dict['importance'] = each_dict['importance'] + phrase_importance
-
-
-            # l = len(phrase)
-            # print()
-            # for ent in phrase_doc.ents:
-            #     print("Entity: ",ent)                # print("Entity: ", ent)
-                # if not ent in STOP_WORDS:
-                #     temp = {}
-                #     temp['word'] = ent
-                #     temp['entity'] = ent.label_
-                #     for each_word in words:
-                #         if each_word['scene_num'] == scene_no and each_word['sentence_no'] == sentence_no and each_word['word'] == ent:                       
-                #             if ent.label_ == 'DATE':
-                #                 each_word['importance'] = (each_word['importance'] + DATE) * l
-                #                 temp['importance'] = each_word['importance']
-                #             elif ent.label_ == 'TIME':
-                #                 each_word['importance'] = (each_word['importance'] + TIME) * l
-                #                 temp['importance'] = each_word['importance']
-                #             elif each_word['type'] == 'DL_SPEAKER':                 #character
-                #                 CH = imp_of_character()        #in scene
-                #                 each_word['importance'] = (each_word['importance'] + CH) * l
-                #                 temp['importance'] = each_word['importance']
-                #             elif each_word['POS'] == 'VB' or each_word['POS'] == 'VBZ':
-                #                 each_word['importance'] = (each_word['importance'] + VERB) * l
-                #                 temp['importance'] = each_word['importance']
-                #             elif each_word['POS'] == 'CD':
-                #                 each_word['importance'] = (each_word['importance'] + CD) * l
-                #                 temp['importance'] = each_word['importance']
-                #             elif each_word['POS'] == 'RB' or each_word['POS'] == 'JJ':
-                #                 each_word['importance'] = (each_word['importance'] + AB) * l
-                #                 temp['importance'] = each_word['importance']
-                #             else:
-                #                 pass      # location, object, etc to be added
-                #     to be worked on
-                #sentences['entity'].append(temp)
-
-# ########################### Sentence Importance ##################
+    sentence_no = each_sentence['sentence_no']
+    if each_sentence['type'] == 'SL':
+        each_sentence['importance'] += set_slugline_sentence_importance(scene_no, sentence_no, each_sentence)
 
 for each_sentence in sentences:
     scene_no = each_sentence['scene_no']
@@ -569,29 +570,13 @@ for each_sentence in sentences:
     sent_imp = 0
     for each_dict in each_sentence['phrases']:
         sent_imp = sent_imp + each_dict['importance']
-    each_sentence['importance'] = sent_imp
+        each_sentence['importance'] = each_sentence['importance'] +  round(sent_imp, 2)
+        each_sentence['importance'] = round(each_sentence['importance'], 2)
 
-# print("Sentences list: ------------------------------------------------------------")
-# for each_sent in sentences:
-#   print(each_sent)
-#   print()
+# for s in sentences:
+#     print("Sentence: ", s['sentence']," || Scene: ", s['scene_no']," || Sent no: ", s['sentence_no'], " || Importance: ", s['importance'])
+#     print()
 
-# print("Sentences and importance list: ------------------------------------------------------------")
-# for each_sent in sentences:
-#   print("Sentence: ",each_sent['sentence'], "| Importance ", each_sent['importance'])
-#   print()
-########################### Scene Importance ##################
-
-# for i in range(1, len(scenes)):
-#     for each_sentence in sentences:
-#     scene_no = each_sentence['scene_no']
-
-# for each_word in words:
-#   print(each_word)
-#   print()
-
-    
-print("Word list: ------------------------------------------------------------")
-for each_word in words:
-  print(each_word)
-  print()
+for s in words:
+    print(s)
+    print()
