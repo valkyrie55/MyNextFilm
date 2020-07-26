@@ -1,0 +1,229 @@
+     File read successfully
+     Total sentences:  150
+
+     Threshold value:  391.64
+     Threshold count:  60
+
+--------------------------
+sentences list: 
+--------------------------
+sentence:  It s a Saturday evening  | Calculated importance:  132.1  | Importance:  1
+
+sentence:  The area around the mall is too crowded  | Calculated importance:  393.8  | Importance:  2
+
+sentence:  Their car Mercedez S class arrives  | Calculated importance:  465.35  | Importance:  3
+
+sentence:  As soon as they sit in the car Kush s phone buzzez  | Calculated importance:  1254.95  | Importance:  4
+
+sentence:  We see two guys coming out of the mall near the corrider  | Calculated importance:  1709.8  | Importance:  5
+
+sentence:  One guy Akash 35 is wearing shorts and a tshirt with branded shoes carrying his gym bag and a sipper  | Calculated importance:  3639.25  | Importance:  6
+
+sentence:  Other guy Kush 38 is wearing joggers with tshirt carrying a gym bag and a phone on the other hand  | Calculated importance:  5932.5  | Importance:  7
+
+sentence:  The bio reads  | Calculated importance:  394.48  | Importance:  1
+
+sentence:  He opens the profile he matched with Pooja  | Calculated importance:  787.59  | Importance:  2
+
+sentence:  He gets a notification saying Its a match  | Calculated importance:  1704.3  | Importance:  3
+
+sentence:  He clicks on the profile to read the bio  | Calculated importance:  1706.14  | Importance:  4
+
+sentence:  He unlocks his phone and gets excited by seeing the notification  | Calculated importance:  2039.0  | Importance:  5
+
+sentence:  Kush s not able to see the full face but just the side angle  | Calculated importance:  3265.2  | Importance:  6
+
+sentence:  There is a side picture of a woman with open straight hair and wearing big jhumkas  | Calculated importance:  6137.8  | Importance:  7
+
+sentence:  And the most important thing No strings attached  | Calculated importance:  785.29  | Importance:  1
+
+sentence:  It doesn t even matter whatever i write down here but still you re gonna swipe based on the pictures but still I am writing  | Calculated importance:  958.04  | Importance:  2
+
+sentence:  I am Delhite Punjabi Gemini Doglover I am 5 7 Married in Delhi fun loving person who likes to live on her own conditions IF YOU RE LOOKING FOR A HOOKE UP THEN SWIPE RIGHT BECAUSE I AM ONLY LOOKING FOR A CASUAL RELATIONSHIP with a smart decent and a mature person also can t tolerate grammar mistakes  | Calculated importance:  41945.3  | Importance:  3
+
+sentence:  Meanwhile Akash calls his girlfriend on the phone  | Calculated importance:  656.34  | Importance:  1
+
+sentence:  Kush gets more excited looking at the bio  | Calculated importance:  790.63  | Importance:  2
+
+sentence:  Kush sees the bio and immediately sends Pooja HI  | Calculated importance:  921.57  | Importance:  1
+
+sentence:  They go outside for nariyal paani  | Calculated importance:  786.35  | Importance:  1
+
+sentence:  Kush is very much into the conversation with Pooja and doesn t give much attention to Akash  | Calculated importance:  1700.55  | Importance:  2
+
+sentence:  As they take one sip of naariyal paani and Jay gets another notification  | Calculated importance:  3930.5  | Importance:  3
+
+sentence:  Akash is confused  | Calculated importance:  50.75  | Importance:  1
+
+sentence:  But Kush convinces him that he has something very important and will tell him everything later  | Calculated importance:  854.65  | Importance:  2
+
+sentence:  Kush immediately books a cab and tell Akash that he needs to go somewhere urgently  | Calculated importance:  2497.15  | Importance:  3
+
+sentence:  Kush uber arrives and he messages Pooja  | Calculated importance:  152.25  | Importance:  1
+
+sentence:  Kush is very excited  | Calculated importance:  0  | Importance:  1
+
+sentence:  WE SEE SHOTS OF THE CAR GOING RAPIDLY  | Calculated importance:  453.49  | Importance:  2
+
+sentence:  Kush is getting impatient  | Calculated importance:  198.47  | Importance:  1
+
+sentence:  He ask the driver  | Calculated importance:  393.62  | Importance:  2
+
+sentence:  Pooja has messaged that she has reached  | Calculated importance:  152.49  | Importance:  1
+
+sentence:  Kush phone buzzez  | Calculated importance:  197.64  | Importance:  2
+
+sentence:  We see patients everywhere  | Calculated importance:  50.5  | Importance:  1
+
+sentence:  Kush reaches there  | Calculated importance:  51.5  | Importance:  2
+
+sentence:  Jay is in a hurry  | Calculated importance:  131.6  | Importance:  3
+
+sentence:  He reaches in the cafe  | Calculated importance:  394.8  | Importance:  4
+
+sentence:  There is silence and sadness in the hospital  | Calculated importance:  461.85  | Importance:  5
+
+sentence:  He pays the driver in a hurry and runs towards the hospital  | Calculated importance:  2762.6  | Importance:  6
+
+sentence:  Monotonous we can see people stressed out  | Calculated importance:  251.67  | Importance:  1
+
+sentence:  Medicines on the right table  | Calculated importance:  327.42  | Importance:  2
+
+sentence:  There is a little silence  | Calculated importance:  391.64  | Importance:  3
+
+sentence:  Some old woman in crying sitting in a cafe  | Calculated importance:  2484.43  | Importance:  4
+
+sentence:  She is 5 7  | Calculated importance:  0  | Importance:  1
+
+sentence:  Kush approaches her  | Calculated importance:  50.67  | Importance:  2
+
+sentence:  He says Hi  | Calculated importance:  197.83  | Importance:  3
+
+sentence:  Kush is in a awe looking at her  | Calculated importance:  393.31  | Importance:  4
+
+sentence:  She is in yellow dress straight hair  | Calculated importance:  588.96  | Importance:  5
+
+sentence:  Pooja turns around and we see a beautiful woman  | Calculated importance:  2353.66  | Importance:  6
+
+sentence:  She flips her hair behind her ear Kush sees her wearing the same jhumkas  | Calculated importance:  2687.22  | Importance:  7
+
+sentence:  Kush is looking around here and there and he sees a reflection of a woman from the glass door sitting on a side table  | Calculated importance:  8386.49  | Importance:  8
+
+sentence:  They chuckle and give a sid hug to each other and then sit  | Calculated importance:  2099.35  | Importance:  1
+
+sentence:  Kush sips drinks very proudly  | Calculated importance:  201.34  | Importance:  1
+
+sentence:  Kush is just looking at her  | Calculated importance:  101.0  | Importance:  1
+
+sentence:  Their ola is waiting outside  | Calculated importance:  199.15  | Importance:  2
+
+sentence:  He can see the jhumkas from her dupatta  | Calculated importance:  724.55  | Importance:  3
+
+sentence:  They are going towards the cab in a hurry  | Calculated importance:  918.7  | Importance:  4
+
+sentence:  They go outside the cafe Pooja starts wearing sunglasses and covers her head with the dupatta  | Calculated importance:  2444.35  | Importance:  5
+
+sentence:  Pooja stops him  | Calculated importance:  51.0  | Importance:  1
+
+sentence:  He slides his hand towards her thigh  | Calculated importance:  463.35  | Importance:  2
+
+sentence:  They are in the car and Kush is getting impatient  | Calculated importance:  724.55  | Importance:  3
+
+sentence:  Pooja gives the OTP to the driver as they sit in the car  | Calculated importance:  1711.3  | Importance:  4
+
+sentence:  Kush then comes closer to Pooja  | Calculated importance:  100.75  | Importance:  1
+
+sentence:  Kush is just looking at her with awe  | Calculated importance:  198.15  | Importance:  1
+
+sentence:  Kush then keeps his hand on her hand  | Calculated importance:  660.0  | Importance:  1
+
+sentence:  Kush then gets out of the car in a hurry He reach the shop and ask the shopkeeper  | Calculated importance:  6033.08  | Importance:  1
+
+sentence:  Kush then looks around in the shop  | Calculated importance:  393.46  | Importance:  1
+
+sentence:  Pooja is waiting and looking from the window  | Calculated importance:  786.63  | Importance:  1
+
+sentence:  Kush smartly takes out the viagra under the table  | Calculated importance:  1179.87  | Importance:  2
+
+sentence:  Pops one in his mouth and start drinking coke  | Calculated importance:  1648.76  | Importance:  3
+
+sentence:  As soon as the shopkeeper go to swipe the car  | Calculated importance:  1707.95  | Importance:  4
+
+sentence:  Kush sits in the car and car starts moving  | Calculated importance:  2100.9  | Importance:  5
+
+sentence:  Shopkeekper puts viagra coke and water bottle on the table  | Calculated importance:  2558.56  | Importance:  6
+
+sentence:  Kush immediately get his wallet and gives the card to the shopkeeper  | Calculated importance:  2887.38  | Importance:  7
+
+sentence:  Kush takes his card back water bottle and run towards the car while drinking the coke  | Calculated importance:  5330.71  | Importance:  8
+
+sentence:  We see the shots of the car in the Delhi traffic  | Calculated importance:  721.86  | Importance:  1
+
+sentence:  Pooja gets a little relaxed and complains about the traffic  | Calculated importance:  3529.39  | Importance:  2
+
+sentence:  Pooja ignores  | Calculated importance:  50.67  | Importance:  1
+
+sentence:  Its written MAID  | Calculated importance:  50.67  | Importance:  2
+
+sentence:  Kush sees her phone vibrating  | Calculated importance:  925.17  | Importance:  3
+
+sentence:  Pooja is resting her head on his shoulder and her phone starts vibrating  | Calculated importance:  1582.76  | Importance:  4
+
+sentence:  Pooja sees the phone and picks it up  | Calculated importance:  788.93  | Importance:  1
+
+sentence:  Kush gets in shock  | Calculated importance:  197.99  | Importance:  1
+
+sentence:  She can t find her wallet  | Calculated importance:  263.55  | Importance:  2
+
+sentence:  Pooja then starts looking in her purse  | Calculated importance:  264.55  | Importance:  3
+
+sentence:  Driver stops the car near the ATM  | Calculated importance:  395.55  | Importance:  1
+
+sentence:  Kush gets out of the car in a hurry  | Calculated importance:  919.7  | Importance:  2
+
+sentence:  He then takes the cash out of the ATM and run towards the car  | Calculated importance:  1709.55  | Importance:  3
+
+sentence:  Kush sits in the car and give the cash to Pooja  | Calculated importance:  1709.8  | Importance:  4
+
+sentence:  Kush is very excited  | Calculated importance:  0  | Importance:  1
+
+sentence:  He calls his friend Akash  | Calculated importance:  198.03  | Importance:  2
+
+sentence:  They reach the Hotel  | Calculated importance:  392.74  | Importance:  3
+
+sentence:  They both get out of the car  | Calculated importance:  392.96  | Importance:  4
+
+sentence:  He goes inside the bathroom  | Calculated importance:  393.29  | Importance:  5
+
+sentence:  The guard opens the gate for the lady  | Calculated importance:  1569.57  | Importance:  6
+
+sentence:  The driver stops the car at the porch  | Calculated importance:  1569.9  | Importance:  7
+
+sentence:  Pooja is at the reception asking about the presidential suit  | Calculated importance:  1698.89  | Importance:  8
+
+sentence:  Pooja directly go towards the reception and Kush goes to the washroom  | Calculated importance:  2227.98  | Importance:  9
+
+sentence:  He then messages Pooja  | Calculated importance:  100.61  | Importance:  1
+
+sentence:  He looks down and getting more desperate  | Calculated importance:  151.94  | Importance:  2
+
+sentence:  He cuts the call  | Calculated importance:  392.41  | Importance:  3
+
+sentence:  Gets out of the bathroom  | Calculated importance:  393.07  | Importance:  4
+
+sentence:  He puts some lotion on face  | Calculated importance:  720.43  | Importance:  5
+
+sentence:  Kush is in the washroom and starts looking himself in the mirror getting ready for the night  | Calculated importance:  3533.87  | Importance:  6
+
+sentence:  Kush waits for few seconds  | Calculated importance:  50.61  | Importance:  1
+
+sentence:  she takes few more seconds  | Calculated importance:  50.61  | Importance:  2
+
+sentence:  Pooja is typing  | Calculated importance:  50.72  | Importance:  3
+
+sentence:  Kush is waiting for her reply  | Calculated importance:  197.92  | Importance:  4
+
+sentence:  His phone reads  | Calculated importance:  198.25  | Importance:  5
+
+sentence:  Kush gets really confused with her reply  | Calculated importance:  198.25  | Importance:  1
+
