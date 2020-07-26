@@ -1,0 +1,106 @@
+     File read successfully
+     Total sentences:  150
+
+     Reduction percent:  40
+     Retain percent:  60
+     Threshold value:  391.64
+     Number of sentences below threshold value  48
+     Number of sentences above threshold value  102
+     --------------------------
+     sentences to be removed: 
+     --------------------------
+     Sentence:  She is 5 7 || Importance:  0
+
+     Sentence:  Kush is very excited || Importance:  0
+
+     Sentence:  We see patients everywhere || Importance:  50.5
+
+     Sentence:  Kush waits for few seconds || Importance:  50.61
+
+     Sentence:  she takes few more seconds || Importance:  50.61
+
+     Sentence:  Looks everywhere || Importance:  50.61
+
+     Sentence:  Kush approaches her || Importance:  50.67
+
+     Sentence:  Kush is all surprised his eyes gets wide open || Importance:  50.67
+
+     Sentence:  Pooja ignores || Importance:  50.67
+
+     Sentence:  Its written MAID || Importance:  50.67
+
+     Sentence:  Pooja thinks for a second || Importance:  50.67
+
+     Sentence:  Pooja is typing || Importance:  50.72
+
+     Sentence:  Akash is confused || Importance:  50.75
+
+     Sentence:  Kush gets worried || Importance:  50.94
+
+     Sentence:  Kush gets really stressed || Importance:  50.94
+
+     Sentence:  Kush gets really worried || Importance:  50.94
+
+     Sentence:  Pooja stops him || Importance:  51.0
+
+     Sentence:  Kush reaches there || Importance:  51.5
+
+     Sentence:  He then messages Pooja || Importance:  100.61
+
+     Sentence:  Kush then comes closer to Pooja || Importance:  100.75
+
+     Sentence:  Kush is just looking at her || Importance:  101.0
+
+     Sentence:  Jay is in a hurry || Importance:  131.6
+
+     Sentence:  It s a Saturday evening || Importance:  132.1
+
+     Sentence:  WIDE SHOT OF KUSH STANDING IN FRONT OF THE GATE ALONE || Importance:  151.83
+
+     Sentence:  He looks down and getting more desperate || Importance:  151.94
+
+     Sentence:  As he is typing It Unmatches || Importance:  152.05
+
+     Sentence:  Kush takes two seconds to reply || Importance:  152.17
+
+     Sentence:  Kush uber arrives and he messages Pooja || Importance:  152.25
+
+     Sentence:  Pooja has messaged that she has reached || Importance:  152.49
+
+     Sentence:  Kush phone buzzez || Importance:  197.64
+
+     Sentence:  Their conversation starts || Importance:  197.83
+
+     Sentence:  He says Hi || Importance:  197.83
+
+     Sentence:  Kush is only listening to her and nodding || Importance:  197.83
+
+     Sentence:  Kush is waiting for her reply || Importance:  197.92
+
+     Sentence:  Kush gets in shock || Importance:  197.99
+
+     Sentence:  He calls his friend Akash || Importance:  198.03
+
+     Sentence:  He then calls his friend Akash || Importance:  198.03
+
+     Sentence:  Kush is just looking at her with awe || Importance:  198.15
+
+     Sentence:  His phone reads || Importance:  198.25
+
+     Sentence:  Kush gets really confused with her reply || Importance:  198.25
+
+     Sentence:  Kush is getting impatient || Importance:  198.47
+
+     Sentence:  Their ola is waiting outside || Importance:  199.15
+
+     Sentence:  Kush sips drinks very proudly || Importance:  201.34
+
+     Sentence:  Monotonous we can see people stressed out || Importance:  251.67
+
+     Sentence:  She can t find her wallet || Importance:  263.55
+
+     Sentence:  Pooja then starts looking in her purse || Importance:  264.55
+
+     Sentence:  Medicines on the right table || Importance:  327.42
+
+     len of sentences_to_be_removed:  48
