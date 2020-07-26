@@ -1,5 +1,4 @@
 ########################################################### PART I CODE ###############################################################
-
 import re
 import nltk
 import spacy
@@ -143,6 +142,7 @@ for scene in scenes:
     # scene_dict={}
     diag_sentence_no = 1
     sentence_no = 0
+    paragraph_no = 0
     action_counter=1
     dialogue_counter=1
     for line in scene:
@@ -157,11 +157,13 @@ for scene in scenes:
                     temp_word['type_no'] = "" 
                     temp_word['sentence_no'] = 0
                     temp_word['word_no_in sent'] = "??"
-                    temp_word['importance'] = 0.5
+                    temp_word['i'] = 0.5
                     temp_word['POS'] = '??pos'
+                    temp_word['paragraph_no'] = '??'
                     #temp_word['Dependency'] = ''
                     words.append(temp_word)
             else:
+                paragraph_no += 1
                 sent_text = line.split('.')
                 for s in sent_text:
                     if s:
@@ -179,9 +181,11 @@ for scene in scenes:
                             temp_word['type_no'] = str(action_counter)
                             temp_word['sentence_no'] = sentence_no
                             temp_word['word_no_in_sent'] = word_no
-                            temp_word['importance'] = 0.5
+                            temp_word['i'] = 0.5
+                            temp_word['importance'] = 0
                             temp_word['POS'] = pos
                             temp_word['remove'] = 0
+                            temp_word['paragraph_no'] = paragraph_no
                             words.append(temp_word)
                 action_counter += 1           
         else:
@@ -201,8 +205,8 @@ def set_frequency(word_frequencies, scene_no, max_frequency):
         if each_word['scene_num'] == scene_no:
             for word_ in word_frequencies.keys():
                 if each_word['word'] == word_:
-                    new_imp = each_word['importance'] + (word_frequencies[word_] / max_frequency)
-                    each_word['importance'] = round(new_imp,2)
+                    new_imp = each_word['i'] + (word_frequencies[word_] / max_frequency)
+                    each_word['i'] = round(new_imp,2)
 
 
 def filt(x):
@@ -233,7 +237,7 @@ def find_phrases(sentence, scene_no, sentence_no):
     for noun_phrase in noun:
         temp = {}
         temp['phrase'] = noun_phrase
-        temp['importance'] = 0
+        temp['i'] = 0
         temp['phrase_type'] = 'NP'
         for each_sentence in sentences:
             if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no'] == sentence_no:
@@ -245,7 +249,7 @@ def find_phrases(sentence, scene_no, sentence_no):
     for verb_phrase in verb:
         temp = {}
         temp['phrase'] = verb_phrase
-        temp['importance'] = 0
+        temp['i'] = 0
         temp['phrase_type'] = 'VP'
         for each_sentence in sentences:
             if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no'] == sentence_no:
@@ -273,13 +277,13 @@ def compute_slugline_words_frequency(para):
 
 def set_slugline_words_importance(w, each_word, slugline_words_frequency):
     if w in slug_line_words:
-        each_word['importance'] = each_word['importance'] + slugline_words_frequency[w] 
+        each_word['i'] = each_word['i'] + slugline_words_frequency[w] 
 
 def set_slugline_sentence_importance(scene_no, sentence_no, each_sentence):
     imp = 0
     for each_word in words:
         if each_word['scene_num'] == scene_no and each_word['type'] == 'SL':
-            imp += round(each_word['importance'], 2)
+            imp += round(each_word['i'], 2)
     return imp
 
 def set_importance(token, sent_no, scene_no, phrase_length, NP, VP, p):
@@ -289,31 +293,32 @@ def set_importance(token, sent_no, scene_no, phrase_length, NP, VP, p):
             if p == 'NP':
                 pos = each_word['POS']
                 if word in characters:
-                    each_word['importance'] = each_word['importance'] + character_importance(word, scene_no, sent_no) 
-                    phrase_importance = each_word['importance']
+                    each_word['i'] = each_word['i'] + character_importance(word, scene_no, sent_no) 
+                    phrase_importance = each_word['i']
                 elif pos == 'NN' or 'NNS' or 'NNP' or 'NNPS' :   #city, object, etc
-                    each_word['importance'] = each_word['importance'] + NP * phrase_length
-                    phrase_importance = each_word['importance']
+                    each_word['i'] = each_word['i'] + NP * phrase_length
+                    phrase_importance = each_word['i']
                 else: 
-                    each_word['importance'] = each_word['importance'] + NP * phrase_length
-                    phrase_importance = each_word['importance']
-                    phrase_word_importance = phrase_word_importance + each_word['importance']
+                    each_word['i'] = each_word['i'] + NP * phrase_length
+                    phrase_importance = each_word['i']
+                    phrase_word_importance = phrase_word_importance + each_word['i']
 
             elif p == 'VP':
                 NP_phrase_count = 0
                 for d in each_sentence['phrases']:
                     if d['phrase_type'] == 'NP':
                         NP_phrase_count += 1
-                        each_word['importance'] += d['importance']
+                        each_word['i'] += d['i']
                 if NP_phrase_count == 0:  
-                    each_word['importance'] += VP * phrase_length
-                phrase_importance = each_word['importance']
+                    each_word['i'] += VP * phrase_length
+                phrase_importance = each_word['i']
 
     return phrase_importance
 
 # #create sentences list
 scene_no = 1
 for each_scene in scenes[1: len(scenes)]:
+    paragraph_no = 0
     sentence_counter = 1
     action_counter = 1
     for sentence in each_scene:
@@ -328,9 +333,11 @@ for each_scene in scenes[1: len(scenes)]:
                 temp['speaker'] = 'NONE'
                 temp['phrases'] = []
                 #temp['phrases'] = []
-                temp['importance'] = 0
+                temp['i'] = 0
+                temp['paragraph_no'] = paragraph_no
                 sentences.append(temp)
-            else:                                                 # AC line
+            else:       
+                paragraph_no += 1                                      # AC line
                 sentence_list = sentence.split('.')      #sentence list
                 for sentence in sentence_list:  
                     if sentence:                  
@@ -342,8 +349,10 @@ for each_scene in scenes[1: len(scenes)]:
                         temp['type_no'] = str(action_counter)
                         temp['speaker'] = '??'
                         temp['phrases'] = []
+                        temp['i'] = 0
                         temp['importance'] = 0
                         temp['remove'] = 0
+                        temp['paragraph_no'] = paragraph_no
                         sentence_counter = sentence_counter + 1
                         sentences.append(temp)
                         action_counter += 1
@@ -399,8 +408,8 @@ for each_sentence in sentences:
             if token.lower() not in STOP_WORDS:
                     # print("Phrase: ", token)
                     imp = set_importance(token, sent_no, scene_no, phrase_length, NP, VP, p)
-                    each_dict['importance'] = each_dict['importance'] + round(imp, 2)
-                    # print("Each_dict: ", each_dict['importance'])
+                    each_dict['i'] = each_dict['i'] + round(imp, 2)
+                    # print("Each_dict: ", each_dict['i'])
 # # #scene string
 for scene_no in range(1, len(scenes)+1):
     para = ''
@@ -428,19 +437,19 @@ for each_sentence in sentences:
     scene_no = each_sentence['scene_no']
     sentence_no = each_sentence['sentence_no']
     if each_sentence['type'] == 'SL':
-        each_sentence['importance'] += set_slugline_sentence_importance(scene_no, sentence_no, each_sentence)
+        each_sentence['i'] += set_slugline_sentence_importance(scene_no, sentence_no, each_sentence)
 
 for each_sentence in sentences:
     scene_no = each_sentence['scene_no']
     sentence_no = each_sentence['sentence_no']
     sent_imp = 0
     for each_dict in each_sentence['phrases']:
-        sent_imp = sent_imp + each_dict['importance']
-        each_sentence['importance'] = each_sentence['importance'] +  round(sent_imp, 2)
-        each_sentence['importance'] = round(each_sentence['importance'], 2)
+        sent_imp = sent_imp + each_dict['i']
+        each_sentence['i'] = each_sentence['i'] +  round(sent_imp, 2)
+        each_sentence['i'] = round(each_sentence['i'], 2)
 
 # for s in sentences:
-#     print("Sentence: ", s['sentence']," || Scene: ", s['scene_no']," || Sent no: ", s['sentence_no'], " || Importance: ", s['importance'])
+#     print("Sentence: ", s['sentence']," || Scene: ", s['scene_no']," || Sent no: ", s['sentence_no'], " || Importance: ", s['i'])
 #     print()
 
 # for s in words:
@@ -453,6 +462,7 @@ for each_sentence in sentences:
 print("     Total sentences: ", len(sentences))
 print()
 ########################################################### PART II CODE ###############################################################
+sentences_final = []
 
 def find_threshold(retain_percent):
     """ Takes as input the percentage of compression required in the script 
@@ -463,7 +473,7 @@ def find_threshold(retain_percent):
     temp = []
     count_sentences = 0
     for sent in sentences:
-        temp.append(sent['importance'])
+        temp.append(sent['i'])
         count_sentences += 1  
     temp.sort() 
     reduced_percent = 1-retain_percent/100   #output script
@@ -472,6 +482,7 @@ def find_threshold(retain_percent):
     threshold_val = temp[threshold_count]
     print("     Threshold value: ", threshold_val)
     print("     Threshold count: ", threshold_count)
+    print()
     return threshold_val, threshold_count
 
 def set_zero_initial(retain_percent):
@@ -480,58 +491,70 @@ def set_zero_initial(retain_percent):
     """
     removal = []
     threshold_v, threshold_c = find_threshold(retain_percent) #find threshold
-    word_no = 1
-    cnt = 0
-    non_rem_cnt = 0
+    # word_no = 1
+    # cnt = 0
+    # non_rem_cnt = 0
     # print ("        threshold value ", threshold_v)
-    for sent in sentences:
-        if sent['type'] == 'SL':         #preserve Slug line
-            sent['remove'] = 0           # not to be removed
-
-        if sent['importance'] < threshold_v and sent['type'] != 'SL': 
-            sent['remove'] = 1     #remove
-            removal.append(sent)           #append the sentences to be removed in the removal list
-            cnt += 1
+    # for sent in sentences:
+    #     if sent['i'] < threshold_v and sent['type'] != 'SL': 
+    #         sent['remove'] = 1     #remove
+    #         removal.append(sent)           #append the sentences to be removed in the removal list
+    #         cnt += 1
            
-        else:
-            sent['remove'] = 0
-            non_rem_cnt+=1
-        sent_importance.append(sent['importance'])                        # 55
+    #     else:
+    #         sent['remove'] = 0
+    #         non_rem_cnt+=1
+    #     sent_importance.append(sent['i'])                        # 55
 
         #print("importance zero=", each_word['zero_one'])
-    print ("     Number of sentences below threshold value ", cnt)
-    print ("     Number of sentences above threshold value ", non_rem_cnt)
+    # print ("     Number of sentences below threshold value ", cnt)
+    # print ("     Number of sentences above threshold value ", non_rem_cnt)
+    return threshold_c
 
-    return threshold_c, removal
+def convert_importance(change_list, p, scene_no):
+    sorted_change_list = sorted(change_list, key = lambda k: k['i'])
+    val = 1
+    for s in sorted_change_list:
+        s['importance'] += val
+        sentences_final.append(s)
+        val += 1
+    # for s in sorted_change_list:
+    #     print(s)
+    #     print()
+    # for s in sorted_change_list:
+    #     for sentence in sentences_to_be_removed:
+    #         if sentence['scene_no'] == s['scene_no'] and sentence['paragraph_no'] == p:
+    #             sentence['importance'] = s['importance']
+                # print("sentence['importance']: ", sentence['importance'])
 
-def sort_by_importance(threshold_counter, removal):
-    sentences_to_be_removed = sorted(removal, key = lambda k: k['importance'])      #sorted
-    # flag = 1
-    # for i in sentences_to_be_removed:
-    #     if flag != threshold_counter:
-    #         for sentence in sentences:
-    #             if sentence['scene_no'] == i['scene_no'] and sentence['sentence_no'] == i['sentence_no']:
-    #                 sentence['remove'] = 2
-    #                 sentences_to_be_removed['remove'] = 2
-    #                 # 2 = remove it
-    #     flag += 1
+
+def sort_by_importance(threshold_counter):
+    # sentences_to_be_removed = sorted(sentences, key = lambda k: k['i'])      #sorted
+    for scene_no in range(1, len(scenes)):
+        change_list = []
+        for p in range(1, 5):
+            for sentence in sentences:
+                if sentence['scene_no'] == scene_no and sentence['paragraph_no'] == p and sentence['type'] == 'AC':
+                    change_list.append(sentence)
+            convert_importance(change_list, p, scene_no)
+            change_list.clear()
+
     # print("Len of sentences_to_be_removed list: ", len(sentences_to_be_removed))
-    print("     --------------------------")
-    print("     sentences to be removed: ")
-    print("     --------------------------")
-    for i in sentences_to_be_removed[1: threshold_counter]:
-        print("     Sentence: ", i['sentence'], "|| Importance: ", i['importance'])
+    print("--------------------------")
+    print("sentences list: ")
+    print("--------------------------")
+    for i in sentences_final:
+        # print(i)
+        print("sentence: ", i['sentence'], " | Calculated importance: ", i['i'], " | Importance: ", i['importance'])
         print()
-    print(" len of sentences_to_be_removed: ", len(sentences_to_be_removed))
-
 
 # reduction = int(input("How much reduction do you want?"))
 reduction = 40
-print("     Reduction percent: ", reduction)
+# print("     Reduction percent: ", reduction)
 retain_percent = 100 - reduction
-print("     Retain percent: ", retain_percent)
-threshold_counter, sentences_removal_list = set_zero_initial(retain_percent) 
-sort_by_importance(threshold_counter, sentences_removal_list)  
+# print("     Retain percent: ", retain_percent)
+threshold_counter = set_zero_initial(retain_percent) 
+sort_by_importance(threshold_counter)  
 ######################### remove words and write to the doc ###########################
 
 # doc = docx.Document() 
