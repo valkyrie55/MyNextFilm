@@ -467,13 +467,16 @@ for scene in scenes_list:
     scene_no = scene['scene_no']
     scene_importance = scene['importance']
     set_importance3(scene_no, scene_importance)
-
+3
 def find_scene_importance(scene_no):
     imp = 0
+    max_value = 0
     for each_word in words:
         if each_word['scene_num'] == scene_no and each_word['type'] != 'SL':
+            if max_value <= each_word['importance'] :
+                max_value = each_word['importance']
             imp += each_word['importance']
-    return imp
+    return imp               #normalised value
 
 # assign importance to slugline
 for scene in scenes_list:
@@ -488,9 +491,9 @@ for scene in scenes_list:
         set_importance4(token, scene_no, token_importance)
         val += 1
 
-# for w in words:
-#     print(w)
-#     print()
+for w in words:
+    print(w)
+    print()
 ################################ Integrating
 
 def find_threshold(retain_percent):
@@ -662,22 +665,16 @@ def removal_impact_scene(word):
     """
     #print("removal of word in  scene=",word['word'])
     comp_scene_no = word['scene_num']    # compute scene number
-    #print("comp=",comp_scene_no)
     impacted = []                 #list of word_no of the words in the SCENE              
     num_impacted = 0
     word_no=0
     scene_removal_impact=0
     for each_word in words:
         if(each_word['scene_num'] == comp_scene_no):   #loop will execute for all the words in that scene 
-            #print("Scene  word=", each_word['word'], "scene_num=", comp_scene_no, "scene_no=",each_word['scene_num'] )
             scene_removal_impact = scene_removal_impact + each_word['importance']   #the scene removal impact will b the sum of the word importance of all the words in that scene
-            #print(each_word)
             impacted.append(word_no)
-            #print("word_no=", word_no)
             num_impacted = num_impacted+1
         word_no=word_no+1
-    #print("scene removal impact=", scene_removal_impact) 
-    #print("impacted list=", impacted)  
     return scene_removal_impact, num_impacted, impacted 
 
 
@@ -749,8 +746,7 @@ def calculate_a_by_b():
     return stop_threshold
 
     
-reduction = 20
-retain_percent = 100 - reduction
+retain_percent = 40
 threshold_counter = set_zero_initial(retain_percent)   
 convert_importance_to_priority(word_importance)
 g_removal_impact_value_list = assign_word_removal_impact()   #calculate word impact of each word
@@ -765,6 +761,8 @@ a_by_b_threshold = calculate_a_by_b()
 
 # print ("Len of r_priority: ",len(r_priority))
 # print("r_priority_list: ", r_priority)
+# print("Word importance: ")
+# print(word_importance)
 for w in words:
     new_dict = {'zero_one': '1'}
     w.update(new_dict)
@@ -808,11 +806,6 @@ def create_script(doc, slugline_list, action_list):
     act_format.space_after = Pt(12)
     act_format.line_spacing = Pt(12)
     act_format.left_indent = Inches(0.5)
-
-#speaker
-    # for i in range(len(dialogue_speaker)):
-    #     print_speaker(dialogue_speaker[i])
-    #     print_dialogue(dialogue_delivery[i])
 
     doc.save('output_latest.docx')     
 
@@ -874,8 +867,7 @@ for s in range(1, scene_no+1):
             #     val = ' '.join(dd)
             #     dialogue_delivery.append(val)
             #     dialogue_counter += 1
-    # print("Total words in ", s," scene: ", cnt_total)
-    # print("words removed from",s," scene : ", cnt_removed)
+    print("Total words in ", s," scene: ", cnt_total)
+    print("words removed from",s," scene : ", cnt_removed)
     create_script(doc, slugline_list, action_list)
-    # print("---------------------------------------------")    
-print("Done!")
+# print("Done!")
