@@ -23,7 +23,7 @@ import warnings
 warnings.warn = warn
 
 random_list = []          
-filename = "bhanwar15.txt"
+filename = "itsamatch.txt"
 refined_line = []
 #### read file
 try:
@@ -32,12 +32,13 @@ try:
     print(" File read successfully")
 except: 
     print(" Error reading file!")
+
 for line in input_:
     refined_line.append(line.strip())
 
 #read json file
 try:
-    with open('/home/shweta/work/MNF_work/papers/vectors/bhanwar15CharacterVector.json') as f:
+    with open('/home/shweta/work/MNF_work/papers/vectors/itsamatchCharacterVector.json') as f:
         data = json.load(f)
 except:
     print("Error in reading json file!")
@@ -133,7 +134,7 @@ def find_noun_phrases(sentence):
     noun.append(res)
   return noun
 
-def find_phrases(sentence, scene_no, sentence_no, sent_type, paragraph_no):
+def find_phrases(sentence, scene_no, sentence_no_in_scene, sent_type, paragraph_no):
     if sentence:
         if sentence.startswith('EXT') or sentence.startswith('INT'):  
             return
@@ -153,10 +154,10 @@ def find_phrases(sentence, scene_no, sentence_no, sent_type, paragraph_no):
                 temp['phrase_type'] = 'NP'
                 # append phrase data in sentences list
                 for each_sentence in sentences:
-                    if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no'] == sentence_no:
+                    if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no_in_scene'] == sentence_no_in_scene:
                         each_sentence['phrases'].append(temp)                   
                 temp['scene_no'] = scene_no
-                temp['sentence_no'] = sentence_no
+                temp['sentence_no_in_scene'] = sentence_no_in_scene
                 temp['type'] = sent_type
                 temp['paragraph_no'] = paragraph_no
                 phrases.append(temp)
@@ -172,10 +173,10 @@ def find_phrases(sentence, scene_no, sentence_no, sent_type, paragraph_no):
                 temp['importance'] = val
                 temp['phrase_type'] = 'VP'
                 for each_sentence in sentences:
-                    if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no'] == sentence_no:
+                    if each_sentence['scene_no'] == scene_no and each_sentence['sentence_no_in_scene'] == sentence_no_in_scene:
                         each_sentence['phrases'].append(temp)
                 temp['scene_no'] = scene_no
-                temp['sentence_no'] = sentence_no
+                temp['sentence_no_in_scene'] = sentence_no_in_scene
                 temp['type'] = sent_type
                 temp['paragraph_no'] = paragraph_no
                 phrases.append(temp)
@@ -194,82 +195,20 @@ def character_importance(character_name):
 
 def set_importance(phrase, sent_no, scene_no, importance):
     for each_phrase in phrases:
-        if each_phrase['scene_no'] == scene_no and each_phrase['sentence_no'] == sent_no and each_phrase['phrase'].lower() == phrase.lower():          
+        if each_phrase['scene_no'] == scene_no and each_phrase['sentence_no_in_scene'] == sent_no and each_phrase['phrase'].lower() == phrase.lower():          
             each_phrase['importance'] = each_phrase['importance'] * importance 
 
-def set_importance1(phrase, sent_no, scene_no, importance):
+def set_importance1(ph, sent_no, scene_no, importance):
     for each_phrase in phrases:
-        if each_phrase['scene_no'] == scene_no and each_phrase['sentence_no'] == sent_no and each_phrase['phrase'].lower() == phrase.lower() :    
-                 each_phrase['importance'] = each_phrase['importance'] * importance 
-
+        if each_phrase['scene_no'] == scene_no and each_phrase['sentence_no_in_scene'] == sent_no and each_phrase['phrase'].lower() == ph.lower() :    
+                each_phrase['importance'] = each_phrase['importance'] * importance 
 #calculate imp of the sentences
 def set_importance2(phrase, scene_no, sent_no):
     for each_phrase in phrases:
-        if each_phrase['scene_no'] == scene_no and each_phrase['sentence_no'] == sent_no and each_phrase['phrase'].lower() == phrase.lower() : 
+        if each_phrase['scene_no'] == scene_no and each_phrase['sentence_no_in_scene'] == sent_no and each_phrase['phrase'].lower() == phrase.lower() : 
             return each_phrase['importance']
     return 0
-
-# create words list
-new_scene=[]
-scene_no=0
-for scene in scenes:
-    if scene_no == 0:
-        scene_no = scene_no+1
-        continue
-    scene_dict={}
-    sentence_no = 0
-    paragraph_no = 0
-    action_counter=1
-    dialogue_counter=1
-    for line in scene:
-        if type(line)==type(""):
-            if line.startswith('INT') or line.startswith('EXT') or line.startswith('EXT/INT') or line.startswith('INT/EXT'):
-                scene_dict['SL'] = line
-                slug_words = line.split(" ")
-                for each_word in slug_words:
-                    temp_word={}
-                    temp_word['word'] = each_word
-                    temp_word['scene_num'] = scene_no
-                    temp_word['type'] = 'SL'
-                    temp_word['type_no'] = "" 
-                    temp_word['sentence_no'] = '??'
-                    temp_word['word_no_in sent'] = "??"
-                    temp_word['importance'] = 1
-                    temp_word['POS'] = '??pos'
-                    temp_word['paragraph_no'] = '??'
-                    temp_word['zero_one'] = '1'
-                    words.append(temp_word)
-            else:
-                paragraph_no += 1
-                scene_dict['AC' + str(action_counter)] = line
-                sent_text = line.split('.')
-                for s in sent_text:
-                    if s:
-                        sentence = str(s)     #remove punchuations
-                        tokens = nltk.word_tokenize(sentence)
-                        pos_tag = nltk.pos_tag(tokens)
-                        sentence_no = sentence_no+1
-                        word_no = 0
-                        for (token,pos) in pos_tag:
-                            word_no = word_no + 1
-                            temp_word = {}
-                            temp_word['word'] = token
-                            temp_word['scene_num'] = scene_no
-                            temp_word['type'] = 'AC'
-                            temp_word['type_no'] = str(action_counter)
-                            temp_word['sentence_no'] = sentence_no
-                            temp_word['word_no_in_sent'] = word_no
-                            temp_word['POS'] = pos
-                            temp_word['importance'] = 1
-                            temp_word['zero_one'] = '1'
-                            temp_word['paragraph_no'] = paragraph_no
-                            words.append(temp_word)
-                action_counter += 1           
-        else:
-            pass
-    new_scene.append(scene_dict)
-    scene_no = scene_no + 1
-
+  
 #create sentences list
 sentences = []
 scene_no = 1
@@ -281,9 +220,9 @@ for each_scene in scenes[1: len(scenes)]:
         if type(sentence) == type(""):                        
             if sentence.startswith('INT') or sentence.startswith('EXT') or sentence.startswith('EXT/INT') or sentence.startswith('INT/EXT'):
                 temp = {}
-                temp['sentence'] = sentence + '. '
+                temp['sentence'] = sentence 
                 temp['scene_no'] = scene_no
-                temp['sentence_no'] = 0
+                temp['sentence_no_in_scene'] = 0
                 temp['type'] = 'SL'
                 temp['type_no'] = ''
                 temp['speaker'] = '??'
@@ -302,7 +241,7 @@ for each_scene in scenes[1: len(scenes)]:
                         temp = {}
                         temp['sentence'] = sentence + '. '
                         temp['scene_no'] = scene_no
-                        temp['sentence_no'] = sentence_counter
+                        temp['sentence_no_in_scene'] = sentence_counter
                         temp['type'] = 'AC'
                         temp['type_no'] = str(action_counter)
                         temp['speaker'] = '??'
@@ -381,7 +320,7 @@ for character in characters:
     temp['relative_importance'] = 0
     characters_importance.append(temp)
 
-# sort character importance
+# # sort character importance
 characters_importance = sorted(characters_importance, key = lambda k: k['importance'])
 
 val = 1
@@ -397,15 +336,13 @@ for character_dict in characters_importance:
         ch = character_dict['character']
     val += 1 
 
-# print("Characters importance: ")
-# for i in characters_importance:
-#     print(i)
-#     print()
-
 # relative importance of a phrase in the script
 # # find phrases
 for each_sentence in sentences:
-    find_phrases(each_sentence['sentence'], each_sentence['scene_no'], each_sentence['sentence_no'], each_sentence['type'], each_sentence['paragraph_no'])
+    find_phrases(each_sentence['sentence'], each_sentence['scene_no'], each_sentence['sentence_no_in_scene'], each_sentence['type'], each_sentence['paragraph_no'])
+# for p in phrases:
+#     print(p)
+#     print()
 
 # assign inherent importance to phrases
 VP = 5
@@ -417,12 +354,12 @@ for each_phrase in phrases:
         each_phrase['importance'] = each_phrase['importance'] * NP  
     else:
         each_phrase['importance'] = each_phrase['importance'] * 2
-         
-# # importance of sentence in paragraph 
+
+# # # importance of sentence in paragraph 
 for each_sentence in sentences:
     for each_dict in each_sentence['phrases']:
         phrase = each_dict['phrase']
-        set_importance(phrase, each_sentence['sentence_no'], each_sentence['scene_no'], each_sentence['importance'])
+        set_importance(phrase, each_sentence['sentence_no_in_scene'], each_sentence['scene_no'], each_sentence['importance'])
 
 # Note: we are updating importance of phrases in the phrases list, not in the sentences list
 
@@ -439,20 +376,20 @@ for each_phrase in phrases:
         for ch in characters_importance:
             if ch['character'] == ph.strip(' '):
                 importance = ch['relative_importance']
-                set_importance1(ph.strip(' '), each_phrase['sentence_no'], each_phrase['scene_no'], importance)
+                set_importance1(ph, each_phrase['sentence_no_in_scene'], each_phrase['scene_no'], importance)
 
 # calculating sentence importance by adding the importance of the phrases in it
 # Eg: sentence['importance'] = phrase1 + phrase2 + phrase3...
-for each_sentence in sentences:
+for each_sentence in sentences[:10]:
     sentence = each_sentence['sentence']
     for each_dict in each_sentence['phrases']:
         ph = each_dict['phrase']
-        imp = set_importance2(ph, each_sentence['scene_no'], each_sentence['sentence_no'])
+        imp = set_importance2(ph, each_sentence['scene_no'], each_sentence['sentence_no_in_scene'])
         each_sentence['final_importance'] += imp
 
-# for s in sentences:
-#     print("Sentence: ", s['sentence'], " | Phrases: ", s['phrases'], " | final_importance: ", s['final_importance'])
-#     print()
+for s in sentences:
+    print(s)
+    print()
 
 ################################ Integrating
 
@@ -663,7 +600,7 @@ def assign_word_removal_impact():
         removal_impact_value_list.append(each_sentence['removal_impact'])
     return removal_impact_value_list
 
-retain_percent = 50
+retain_percent = 80
 threshold_counter = set_zero_initial(retain_percent)   
 convert_importance_to_priority(sent_importance)
 g_removal_impact_value_list = assign_word_removal_impact()   #calculate word impact of each word
@@ -711,7 +648,7 @@ def create_script(doc, slugline_list, action_list):
     act_format.line_spacing = Pt(12)
     act_format.left_indent = Inches(0.5)
 
-    doc.save('bhanwar_50.docx')     
+    doc.save('itsamatch_20.docx')     
 
 scene_no = len(scenes)
 for s in range(1, scene_no + 1):
