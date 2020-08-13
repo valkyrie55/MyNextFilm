@@ -1,4 +1,4 @@
-
+# latest code
 ######################################################### PART I CODE ###############################################################
 import re
 import nltk
@@ -278,7 +278,7 @@ for each_scene in scenes[1: len(scenes)]:
             temp['sentence_no'] = 0
             temp['paragraph_no'] = 0
             temp['importance'] = 0
-            temp['final_importance'] = 99999
+            temp['final_importance'] = 9999
             temp['zero_one'] = '1'
             sentences.append(temp)
             parentheticals = par_dia[0][0].split(" ")            
@@ -292,7 +292,7 @@ for each_scene in scenes[1: len(scenes)]:
                 temp['sentence_no_in_scene'] = 0
                 temp['paragraph_no'] = 0
                 temp['importance'] = 0
-                temp['final_importance'] = 99999
+                temp['final_importance'] = 9999
                 temp['zero_one'] = '1'
                 sentences.append(temp)
             
@@ -307,7 +307,7 @@ for each_scene in scenes[1: len(scenes)]:
             temp['sentence_no_in_scene'] = 0
             temp['paragraph_no'] = 0
             temp['importance'] = 0
-            temp['final_importance'] = 99999
+            temp['final_importance'] = 9999
             temp['zero_one'] = '1'
             sentences.append(temp)   
     scene_no = scene_no +1
@@ -429,11 +429,13 @@ def find_threshold(retain_percent):
     number_of_sents = 0 
     sent_temp = []
     for each_sentence in sentences:
-        sent_temp.append(each_sentence['final_importance'])
-        number_of_sents += 1   
+        if each_sentence['type'] != 'DL_SPEAKER' and each_sentence['type'] != 'DL_PARENTH' and each_sentence['type'] != 'DL_DELIVERY':
+            sent_temp.append(each_sentence['final_importance'])
+            number_of_sents += 1   
         #print (word_temp[number_of_words-1],number_of_words)   
     sent_temp.sort() 
-    # print(sent_temp)
+    print("importance: ")
+    print(sent_temp)
     reduced_percent = 1 - retain_percent/100   #output script
     print("redu: ",reduced_percent)
     threshold_count = round(number_of_sents * reduced_percent)
@@ -448,10 +450,14 @@ def find_threshold_removal_impact(retain_percent):
     number_of_sents = 0
     sent_temp=[]
     for each_sentence  in sentences:
-        sent_temp.append(each_sentence['removal_impact'])
-        number_of_sents += 1   
+        if each_sentence['type'] != 'DL_SPEAKER' and each_sentence['type'] != 'DL_PARENTH' and each_sentence['type'] != 'DL_DELIVERY':
+            sent_temp.append(each_sentence['removal_impact'])
+            number_of_sents += 1   
         #print (word_temp[number_of_words-1],number_of_words)   
-    # sent_temp.sort() 
+    sent_temp.sort()
+    print() 
+    print("Removal impact: ")
+    print(sent_temp)
     retain_percent = 1 - retain_percent/100
     #print("redu=",reduced_percent)
     threshold_count = round(number_of_sents * retain_percent)
@@ -594,7 +600,7 @@ def removal_impact_remaining_sents(each_sentence):
     sent_removal_impact = 0
     for each_sentence in sentences:
         if(each_sentence['scene_no'] == comp_scene_no and each_sentence['type'] == comp_scene_type):
-            sent_removal_impact +=  9999
+            sent_removal_impact +=  999
             impacted.append(sent_no)
             num_impacted = num_impacted + 1
         sent_no = sent_no + 1
@@ -701,7 +707,7 @@ def create_script(doc, dialogue_speaker, dialogue_delivery, dialogue_parenthetic
         print_speaker(dialogue_speaker[i])
         print_dialogue(dialogue_delivery[i])
 
-    doc.save('final_try.docx')     
+    doc.save('changed_threshold.docx')     
 
 scene_no = len(scenes)
 for s in range(1, scene_no):
